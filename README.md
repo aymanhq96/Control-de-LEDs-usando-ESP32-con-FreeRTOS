@@ -160,23 +160,23 @@ void setup() {
   Serial.begin(115200);
 
   xTaskCreatePinnedToCore(
-    TaskRojo,
-    "Rojo",
-    2048/4,
-    NULL,
-    0,
-    &HandleRojo,
-    0
+    TaskRojo, //Funcion de la tarea
+    "Rojo", //Nombre de la tarea
+    2048/4, //Tamaño de la pila en palabras
+    NULL, //Parametro que recibe la tarea
+    0,  //Prioridad de la tarea
+    &HandleRojo, //Handle de la tarea
+    0 //Nucleo al que se asigna
   );
 
   xTaskCreatePinnedToCore(
-    TaskVerde,
-    "Verde",
-    2048/4,
-    NULL,
-    0,
-    &HandleVerde,
-    0
+    TaskVerde, //Funcion de la tarea
+    "Verde",  //Nombre de la tarea
+    2048/4, //Tamaño de la pila en palabras
+    NULL, //Parametro que recibe la tarea
+    0,  //Prioridad de la tarea
+    &HandleVerde, //Handle de la tarea
+    1 //Nucleo al que se asigna
   );
 
   
