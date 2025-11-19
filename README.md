@@ -6,7 +6,7 @@ Se ha usado Wokwi para realizar la simulación, es una herramienta muy interesan
 
 A continuación se explica detalladamente el funcionamiento del sistema, la estructura del código y el propósito de cada sección.
 
-## **Simulación del ESP32, con los leds y botones**
+## **Simulación del ESP32**
 <img width="922" height="601" alt="image" src="https://github.com/user-attachments/assets/ae0c1e20-af9c-4d52-a21b-f3e289501482" />
 
 
