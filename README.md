@@ -189,7 +189,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(boton1),ISRBotonRojo,FALLING);
   attachInterrupt(digitalPinToInterrupt(boton2),ISRBotonVerde,FALLING);
 
-  // put your setup code here, to run once:
+ 
 
 }
 
