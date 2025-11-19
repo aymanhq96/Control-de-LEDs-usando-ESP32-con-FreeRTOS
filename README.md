@@ -1,6 +1,6 @@
 # Control de LEDs con ESP32 usando FreeRTOS e Interrupciones
 
-Este proyecto implementa un sistema multitarea en un ESP32 para controlar dos botones y dos LEDs (rojo y verde). Se ha diseñado pensando en buenas prácticas de programación embebida, uso eficiente de FreeRTOS y respuesta rápida mediante interrupciones.
+Este proyecto implementa un sistema multitarea en un ESP32 para controlar dos botones y dos LEDs (rojo y verde).
 
 Se ha usado Wokwi para realizar la simulación, es una herramienta muy interesante para poder simular elementos básicos y microcontroladores.
 
