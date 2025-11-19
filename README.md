@@ -37,7 +37,7 @@ El montaje incluye:
 
 * **Botón rojo → GPIO 12** (entrada con `INPUT_PULLUP`)
 * **LED rojo → GPIO 13**
-* **Botón verde → GPIO 17**
+* **Botón verde → GPIO 17** (entrada con `INPUT_PULLUP`)
 * **LED verde → GPIO 23**
 
 Los botones están configurados en modo **pull-up interno**, por lo que su nivel es HIGH normalmente y pasan a LOW al presionar.
