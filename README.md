@@ -257,7 +257,6 @@ void TaskVerde(void *parameters){
   TickType_t xLastWakeTime = xTaskGetTickCount();
 
   while(1){
-    while(1){
     if(verde_pulsado) {
       verde_pulsado = false;
       verdepresionado = true;
@@ -302,7 +301,7 @@ void TaskVerde(void *parameters){
     vTaskDelayUntil(&xLastWakeTime, xPeriod); 
   }
 }
-}
+
 
 void printStats() {
     char buffer[400];
