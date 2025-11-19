@@ -117,7 +117,202 @@ Esto muestra el porcentaje de CPU utilizado por cada tarea, útil para depuraci�
 
 Este enfoque es muy valorado en entornos industriales y de automatización, donde la responsividad y la separación de responsabilidades son fundamentales.
 
+## **Código del proyecto**
 
+```cpp
+#define boton1 12
+#define led1 13
+
+#define boton2 17
+#define led2 23
+
+volatile bool rojo_pulsado = false;
+volatile bool verde_pulsado = false;
+
+
+bool ledRojoState= false;
+bool ledVerdeState= false;
+
+bool rojopresionado = false;
+bool verdepresionado = false;
+
+bool rojo_parpadeo = false;
+bool verde_parpadeo = false;
+
+unsigned long tiempoRojo = 0;
+unsigned long tiempoVerde = 0;
+
+void IRAM_ATTR ISRBotonRojo(){
+  rojo_pulsado = true;
+}
+
+void IRAM_ATTR ISRBotonVerde(){
+  verde_pulsado = true;
+}
+
+
+TaskHandle_t HandleRojo;
+TaskHandle_t HandleVerde;
+
+
+
+void setup() {
+  Serial.begin(115200);
+
+  xTaskCreatePinnedToCore(
+    TaskRojo,
+    "Rojo",
+    2048/4,
+    NULL,
+    0,
+    &HandleRojo,
+    0
+  );
+
+  xTaskCreatePinnedToCore(
+    TaskVerde,
+    "Verde",
+    2048/4,
+    NULL,
+    0,
+    &HandleVerde,
+    0
+  );
+
+  
+  pinMode(boton1,INPUT_PULLUP);
+  pinMode(led1,OUTPUT);
+
+  pinMode(boton2,INPUT_PULLUP);
+  pinMode(led2,OUTPUT);
+
+  attachInterrupt(digitalPinToInterrupt(boton1),ISRBotonRojo,FALLING);
+  attachInterrupt(digitalPinToInterrupt(boton2),ISRBotonVerde,FALLING);
+
+  // put your setup code here, to run once:
+
+}
+
+void loop() {
+    printStats();
+    delay(2000);
+}
+
+void TaskRojo(void *parameters){
+
+  const TickType_t xPeriod = pdMS_TO_TICKS(10);
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+
+  while(1){
+    if(rojo_pulsado) {
+      rojo_pulsado = false;
+      rojopresionado = true;
+      tiempoRojo = millis();
+
+      
+    }
+    if(rojopresionado){
+      if(digitalRead(boton1)==LOW){
+        //medir tiempo
+        if(millis() - tiempoRojo > 500){
+          rojo_parpadeo  = true;
+          rojopresionado = false;
+        }
+      }
+      else{
+        if(!rojo_parpadeo ){
+          ledRojoState = !ledRojoState;
+          digitalWrite(led1,ledRojoState);
+        }
+        rojopresionado = false;
+      }
+    }
+
+    if(rojo_parpadeo ){
+
+      static unsigned long UltimoParpadeo = 0;
+
+      if(millis()- UltimoParpadeo > 200){
+        UltimoParpadeo = millis();
+        ledRojoState = !ledRojoState;
+        digitalWrite(led1,ledRojoState);
+      }
+
+      if(rojopresionado){
+        rojopresionado = false;
+        rojo_parpadeo = false;
+        ledRojoState = false;
+        digitalWrite(led1,LOW);
+      }
+    }
+    vTaskDelayUntil(&xLastWakeTime, xPeriod); 
+
+
+  }
+}
+
+void TaskVerde(void *parameters){
+
+  const TickType_t xPeriod = pdMS_TO_TICKS(10);
+  TickType_t xLastWakeTime = xTaskGetTickCount();
+
+  while(1){
+    while(1){
+    if(verde_pulsado) {
+      verde_pulsado = false;
+      verdepresionado = true;
+      tiempoVerde = millis();
+
+      
+    }
+    if(verdepresionado){
+      if(digitalRead(boton2)==LOW){
+        //medir tiempo
+        if(millis() - tiempoVerde > 500){
+          verde_parpadeo  = true;
+          verdepresionado = false;
+        }
+      }
+      else{
+        if(!verde_parpadeo ){
+          ledVerdeState = !ledVerdeState;
+          digitalWrite(led2,ledVerdeState);
+        }
+        verdepresionado = false;
+      }
+    }
+
+    if(verde_parpadeo ){
+
+      static unsigned long UltimoParpadeo = 0;
+
+      if(millis()- UltimoParpadeo > 200){
+        UltimoParpadeo = millis();
+        ledVerdeState = !ledVerdeState;
+        digitalWrite(led2,ledVerdeState);
+      }
+
+      if(verdepresionado){
+        verdepresionado = false;
+        verde_parpadeo = false;
+        ledVerdeState = false;
+        digitalWrite(led2,LOW);
+      }
+    }
+    vTaskDelayUntil(&xLastWakeTime, xPeriod); 
+  }
+}
+}
+
+void printStats() {
+    char buffer[400];
+    vTaskGetRunTimeStats(buffer);
+    Serial.println("=== Run Time Stats ===");
+    Serial.println(buffer);
+}
+
+
+```
 
 ##  **Posibles mejoras futuras**
 
